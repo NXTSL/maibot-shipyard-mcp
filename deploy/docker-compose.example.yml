@@ -1,0 +1,28 @@
+# Shipyard MCP 桥接器部署示例(双网络)
+# 用法:
+#   1. 先构建镜像: cd bridge && docker build -t shipyard-mcp-bridge .
+#   2. 修改 SHIPYARD_TOKEN 为你的 Bay ACCESS_TOKEN
+#   3. 确认两个网络名存在(docker network ls;compose 网络通常带项目前缀)
+#   4. docker compose -f docker-compose.example.yml up -d
+#
+# 备选方案(不用 compose): docker run + docker network connect,见 README 3.2 节。
+
+services:
+  shipyard-mcp-bridge:
+    image: shipyard-mcp-bridge:latest
+    container_name: shipyard-mcp-bridge
+    restart: unless-stopped
+    environment:
+      - SHIPYARD_URL=http://shipyard:8156
+      - SHIPYARD_TOKEN=CHANGE_ME
+    ports:
+      - "127.0.0.1:8124:8124"
+    networks:
+      - astrbot_network
+      - maibot_maim_bot
+
+networks:
+  astrbot_network:
+    external: true
+  maibot_maim_bot:
+    external: true
