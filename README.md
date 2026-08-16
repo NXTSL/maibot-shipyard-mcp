@@ -131,4 +131,10 @@ maibot-shipyard-mcp/
 
 ## 🙏 致谢
 
-感谢 AstrBot 的 Shipyard、麦麦社区和 MCP 标准,让这一切能拼在一起。
+感谢 AstrBot Shipyard、麦麦社区以及 MCP 标准，让本项目得以实现。
+
+- [AstrBot](https://github.com/AstrBotDevs/AstrBot)
+- [AstrBot Shipyard Neo](https://github.com/AstrBotDevs/shipyard-neo)
+- [MaiBot（麦麦）](https://github.com/Mai-with-u/MaiBot)
+
+
