@@ -2,8 +2,9 @@
 # 用法:
 #   1. 先构建镜像: cd bridge && docker build -t shipyard-mcp-bridge .
 #   2. 修改 SHIPYARD_TOKEN 为你的 Bay ACCESS_TOKEN
-#   3. 确认两个网络名存在(docker network ls;compose 网络通常带项目前缀)
-#   4. docker compose -f docker-compose.example.yml up -d
+#   3. 修改 BRIDGE_TOKEN 为随机长令牌，并同步写入 MaiBot MCP URL
+#   4. 确认两个网络名存在(docker network ls;compose 网络通常带项目前缀)
+#   5. docker compose -f docker-compose.example.yml up -d
 #
 # 备选方案(不用 compose): docker run + docker network connect,见 README 3.2 节。
 
@@ -15,8 +16,31 @@ services:
     environment:
       - SHIPYARD_URL=http://shipyard:8156
       - SHIPYARD_TOKEN=CHANGE_ME
+      - REQUIRE_SHIPYARD_TOKEN=true
+      - BRIDGE_TOKEN=CHANGE_ME_LONG_RANDOM_TOKEN
+      - REQUIRE_BRIDGE_TOKEN=true
+      - BRIDGE_ALLOW_QUERY_TOKEN=true
+      - BRIDGE_ENABLE_SHELL=false
+      - BRIDGE_MAX_TTL_SECONDS=3600
+      - BRIDGE_MAX_CPUS=1.0
+      - BRIDGE_MAX_MEMORY=512m
+      - BRIDGE_MAX_DISK=5G
+      - BRIDGE_MAX_TIMEOUT_SECONDS=60
+      - BRIDGE_MAX_OUTPUT_CHARS=16000
     ports:
       - "127.0.0.1:8124:8124"
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 256m
+    cpus: "0.50"
+    volumes:
+      - shipyard_mcp_state:/app/state
     networks:
       - astrbot_network
       - maibot_maim_bot
@@ -26,3 +50,6 @@ networks:
     external: true
   maibot_maim_bot:
     external: true
+
+volumes:
+  shipyard_mcp_state:
